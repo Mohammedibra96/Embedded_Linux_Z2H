@@ -2,35 +2,35 @@
 clear
 
 c=0
-Arr=()
-Number=()
-Number2=()
-echo ${#Arr[*]}  #size of Arr
-echo ${#Number[*]}
-echo ${#Number2[*]}
+Arr=()   #Array for names 
+Number=() #Array for first Number 
+Number2=() #Array for the second Number
 c=0
 c2=0
-DelteAll=0
+DelteAll=0   #flag For Delete all option 
+#read contacts from phonebookDB.txt
 input=~/phonebookDB.txt
 if [ -e ~/phonebookDB.txt  ]
 then
 	echo "The file is exist"	
 	while IFS= read -r line
-	do
-		echo "hmada"		
+	do		
 		line="$(echo "$line"|tr -d '\n')" 
 		if [[ $c == 0 ]]
 		then 
+			#first line name 				
 			Arr[$c2]="$line"
 			c=$[$c+1]
 				
 		elif [[ $c == 1 ]]
 		then 
+			#second line Number 1
 			Number[$c2]="$line"
 			c=$[$c+1]
 			
 		elif [[ $c == 2 ]]
 		then 
+			#third line Number 2			
 			Number2[$c2]="$line"
 			c=$[$c-2]
 			c2=$[$c2+1]		
@@ -94,7 +94,7 @@ then
 	read -p "Plz enter Name: " AddedName
 	read -p "Plz enter Number: " AddedNumber
 	reg='^[0-9]{8}$'
-	while [[ ! $AddedNumber =~ ^[0-9]+$ ]]
+	while [[ ! $AddedNumber =~ ^[0-9]+$ ]]   #the number must be a digit
 	do
 		read -p "Plz enter a valid number: " AddedNumber
 	done
@@ -107,7 +107,7 @@ then
 		read -p "Plz enter a valid number: " AddedNumber2
 	done	
 	else 
-		AddedNumber2=-1
+		AddedNumber2=-1   #if there isn't number 2  
 	fi
 	f=1
 	for item in ${Arr[*]}
@@ -120,7 +120,7 @@ then
 	done 
 	if [[ $f == 1 ]]
 	then
-		
+		#insert contact in the 3 arrays names and number 1 number 2 
 		size=${#Arr[*]}		
 		Arr[$size]=$AddedName	
 		Number[$size]=$AddedNumber
@@ -169,38 +169,37 @@ echo "View All"
 ##########################
 ##########################
 #view All
-echo ${#Arr[*]}  #size of Arr
-echo ${#Number[*]}
-echo ${#Number2[*]}
 
 Counter1=0
 printf "You have %d Contacts in the list." ${#Number[*]}
 echo ''
 echo '******************************' 
-#echo ${#Number[*]}
-printf "%s\t\t" "Name:"
+
 for item in ${Arr[*]}
-do 
+do
+printf "%s\t\t" "Name:" 
 printf "%s\t" $item
 Counter1=$[$Counter1+1]
 done 
 echo " "
 Counter2=0
-printf "%s\t" "First Number:"
 for itemm in ${Number[*]}
 do 
+printf "%s\t" "First Number:"
 printf "%s\t" $itemm
 Counter2=$[$Counter2+1]
 done 
 
 echo " "
 Counter2=0
-printf "%s\t" "Second Number:"
+
 for itemm in ${Number2[*]}
 do 
-if [[ $itemm == -1  ]]
+printf "%s\t" "Second Number:"
+if [[ $itemm == -1  ]]  #if this contact hasn't number 2
 then 
-	printf "%s\t" "N/A"
+
+	printf "%s\t" "N/A"   #not applicable
 else 
 	printf "%s\t" $itemm
 	Counter2=$[$Counter2+1]
@@ -235,17 +234,17 @@ if [[ $item == $SearchedName ]]
 then
 Found=1 
 echo "The contact information is:"
-printf "%s :" "Name:"
+printf "%s   \t" "Name:"
 echo $item
-printf "%s :" "Number 1:"
+printf "%s\t" "Number 1:"
 echo ${Number[$Counter3]}
-printf "%s :" "Number 2:"
+printf "%s\t" "Number 2:"
 if [[ ${Number2[$Counter3]} == -1  ]]
 then 
 	printf "%s\t" "N/A"
 	echo ""
 else 
-	printf "%s\t" ${Number2[$Counter3]}s
+	printf "%s\t" ${Number2[$Counter3]}
 	echo ""
 fi
 else 
@@ -261,6 +260,7 @@ then
 clear 
 echo "***************************"
 echo "Exit Mode"
+#if the file is exist Delete then update
 if [[	$DelteAll != 1 ]]
 then 
 rm -f ~/phonebookDB.txt
