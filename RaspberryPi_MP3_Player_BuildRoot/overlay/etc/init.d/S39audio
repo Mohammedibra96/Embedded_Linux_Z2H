@@ -1,0 +1,30 @@
+#!/bin/sh
+
+#turn on sound driver 
+modprobe snd-bcm2835
+#turn on wifi driver
+modprobe -vvv brcmfmac
+
+#turn on the bluetooth 
+sudo modprobe hci_uart
+sleep 2
+lsmod
+hciattach /dev/ttyAMA0 bcm43xx 921600 noflow -
+sleep 2
+/usr/libexec/bluetooth/bluetoothd & >/dev/null
+sleep 2
+hciconfig hci0 up
+sleep 2
+
+
+cd /myApplications
+#change the permission of the file 
+chmod 777 hello.o
+chmod 777 DetectUSB
+chmod 777 USBDemon.sh
+chmod 777 sound_player.sh
+
+#For Hello buildroot
+cp hello.o /bin
+#start the demon 
+#start-stop-daemon -b -S -q -x "myApplications/USBDemon.sh"
